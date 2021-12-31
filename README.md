@@ -1,11 +1,16 @@
-# DLT_Eigen
+# DirectLinearTransform_Eigen
 
 ## Purpose
 
-This repository contains an implementation of Direct Linear Transform (DLT) algorithm, writeen in C++ with use of Eigen3 library and fast-cpp-csv-parser library.
+This repository contains an implementation of **Direct Linear Transform (DLT) algorithm**, writeen in C++ with use of Eigen3 library and fast-cpp-csv-parser library.
 
 - Eigen3 library (v3.3) was used to handle matrix data with ease, and perform efficient singular value decomposition (SVD) calculation.
 - fast-cpp-csv-parser library was used to read input data file.
+
+The DLT algorithm is implmented in 2 styles:
+
+- Minimal DLT solver (6 correspondences) + standard RANSAC
+- Over-determined DLT solver
 
 I implemented this code as a part of coding interview.
 
