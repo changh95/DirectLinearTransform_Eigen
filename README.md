@@ -17,8 +17,8 @@ Below is the breakdown of the original problem.
 
 Given the 2 types of data:
 
-- 30 x 2D data points, expressed in camera pixel coodinates $[u,v]^T $ <img src="https://latex.codecogs.com/gif.latex?[u,v]^T" />
-- 30 x 3D data points of the marker positions, expressed in 3D Euclidean coodinates <img src="https://latex.codecogs.com/gif.latex?[x,y,z]^T" />
+- 30 x 2D data points, expressed in camera pixel coodinates $[u,v]^T$
+- 30 x 3D data points of the marker positions, expressed in 3D Euclidean coodinates $[x,y,z]^T$
 
 Find the 3D transformation between the object and the camera.
 
@@ -43,19 +43,19 @@ Therefore, in this code the minimal DLT solver + RANSAC and Over-determined DLT 
 
 ### Over-determined DLT
 
-This method minimises <img src="https://latex.codecogs.com/gif.latex?\lvert\lvert{Bp}\rvert\rvert^2" /> such that <img src="https://latex.codecogs.com/gif.latex?\lvert\lvert{p}\rvert\rvert=1" />. To minimise <img src="https://latex.codecogs.com/gif.latex?\lvert\lvert{Bp}\rvert\rvert^2" />, the system of linear equations must be an over-determined system, which means more than 12 equations are required. This basically turns the problem into a least-squares problem, whilst performing SVD in a large matrix to calculate <img src="https://latex.codecogs.com/gif.latex?P" /> matrix. The <img src="https://latex.codecogs.com/gif.latex?P" /> matrix is already optimised to all data points over least-squares cost function, however it can be further optimised with another robust estimator again in Gauss-Newton algorithm. This method is expected to perform well under the assumption there is no outlier in the dataset.
+This method minimises $\lvert\lvert{Bp}\rvert\rvert^2$ such that $\lvert\lvert{p}\rvert\rvert=1$. To minimise $\lvert\lvert{Bp}\rvert\rvert^2$, the system of linear equations must be an over-determined system, which means more than 12 equations are required. This basically turns the problem into a least-squares problem, whilst performing SVD in a large matrix to calculate $P$ matrix. The $P$ matrix is already optimised to all data points over least-squares cost function, however it can be further optimised with another robust estimator again in Gauss-Newton algorithm. This method is expected to perform well under the assumption there is no outlier in the dataset.
 
 ### Minimal DLT solver + RANSAC
 
-This method formulates the problem as <img src="https://latex.codecogs.com/gif.latex?Bp=0" />, and uses singular value decomposition (SVD) to calculate the projection matrix <img src="https://latex.codecogs.com/gif.latex?P" />. We need 12 observation equations in the <img src="https://latex.codecogs.com/gif.latex?B" /> matrix, which means 6 correspondences are required. Considering the chances of errors and outliers present in the given dataset, we use RANSAC framework to reject the data and achieve the best model parameter. The model paramater can then be further optimised using Gauss-Newton algorithm.
+This method formulates the problem as $Bp = 0$ , and uses singular value decomposition (SVD) to calculate the projection matrix $P$. We need 12 observation equations in the $B$ matrix, which means 6 correspondences are required. Considering the chances of errors and outliers present in the given dataset, we use RANSAC framework to reject the data and achieve the best model parameter. The model paramater can then be further optimised using Gauss-Newton algorithm.
 
 ## Implementation
 
 - Data points are read from `input.csv`, using the `CSVParser` class which is a wrapper of the fast-cpp-csv-parser library. The 2D and 3D data points are stored in `imgCorrds` and `posMarkers` variables respectively.
 - `DLT` class is constructed, and then `DLT.run()` is called.
 - Inside the `run()` function, we first perform over-determined DLT via `doOverDeterminedDLT()`.
-  - First, we create a large <img src="https://latex.codecogs.com/gif.latex?B" /> matrix, sizing 60 x 12. Then we use the `imgCoords` and `posMarkers` data to fill in the <img src="https://latex.codecogs.com/gif.latex?B" /> matrix in the form of system of linear equations. The shape of system of linear equations is shown below
-  - <img src="https://latex.codecogs.com/gif.latex?\begin{bmatrix}X,-Y,-Z,-1,0,0,0,0,uX,uY,uZ,u\\0,0,0,0,-X,-Y,-Z,-1,vX,vY,vZ,v\end{bmatrix}" />
+  - First, we create a large <img src="https://latex.codecogs.com/gif.latex?B" /> matrix, sizing 60 x 12. Then we use the `imgCoords` and `posMarkers` data to fill in the $B$ matrix in the form of system of linear equations. The shape of system of linear equations is shown below
+  - $\begin{bmatrix}X,-Y,-Z,-1,0,0,0,0,uX,uY,uZ,u\\0,0,0,0,-X,-Y,-Z,-1,vX,vY,vZ,v\end{bmatrix}$
   - Then, we perform singular value decomposition (SVD) to extract <img src="https://latex.codecogs.com/gif.latex?p" /> vectors. As the <img src="https://latex.codecogs.com/gif.latex?B" /> matrix is large, we use the BSD-SVD algorithm which is pre-implemented in the Eigen library to efficiently perform SVD. The BSD-SVD algorithm is faster than the usual Jacobi-SVD when used on large matrices. We use the option `ThinU` and `ThinV` computation to speed up the calculation, which gives us all the information to solve the least-squares problem without computing all the elements in the <img src="https://latex.codecogs.com/gif.latex?UDV^T" />.
   - We take the last column vector of the <img src="https://latex.codecogs.com/gif.latex?V^T" /> matrix, which has the <img src="https://latex.codecogs.com/gif.latex?p" /> vectors. Then, we reshape the vector into a 3x4 matrix form.
   - We evaluate the result by computing the average reprojection error. The reprojection error is computed as <img src="https://latex.codecogs.com/gif.latex?([u,v]^T-P[X,Y,Z,1]^T)^2" /> . We sum all the reprojection errors by each data point, then we divide it by the total number of data points (i.e. 30), to achieve average reprojection error.
