@@ -1,5 +1,14 @@
 # DirectLinearTransform_Eigen
 
+# How to use
+
+```bash
+mkdir build
+cd build 
+cmake ..
+make
+```
+
 ## Purpose
 
 This repository contains an implementation of **Direct Linear Transform (DLT) algorithm**, based on using [Eigen](https://www.google.com/search?client=safari&rls=en&q=eigen3&ie=UTF-8&oe=UTF-8). The code also uses [fast-cpp-csv-parser](https://github.com/ben-strasser/fast-cpp-csv-parser) library to read input data file.
