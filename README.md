@@ -2,10 +2,7 @@
 
 ## Purpose
 
-This repository contains an implementation of **Direct Linear Transform (DLT) algorithm**, writeen in C++ with use of Eigen3 library and fast-cpp-csv-parser library.
-
-- Eigen3 library (v3.3) was used to handle matrix data with ease, and perform efficient singular value decomposition (SVD) calculation.
-- fast-cpp-csv-parser library was used to read input data file.
+This repository contains an implementation of **Direct Linear Transform (DLT) algorithm**, based on using [Eigen](https://www.google.com/search?client=safari&rls=en&q=eigen3&ie=UTF-8&oe=UTF-8). The code also uses [fast-cpp-csv-parser](https://github.com/ben-strasser/fast-cpp-csv-parser) library to read input data file.
 
 The DLT algorithm is implmented in 2 styles:
 
@@ -20,7 +17,7 @@ Below is the breakdown of the original problem.
 
 Given the 2 types of data:
 
-- 30 x 2D data points, expressed in camera pixel coodinates <img src="https://latex.codecogs.com/gif.latex?[u,v]^T" />
+- 30 x 2D data points, expressed in camera pixel coodinates $[u,v]^T $ <img src="https://latex.codecogs.com/gif.latex?[u,v]^T" />
 - 30 x 3D data points of the marker positions, expressed in 3D Euclidean coodinates <img src="https://latex.codecogs.com/gif.latex?[x,y,z]^T" />
 
 Find the 3D transformation between the object and the camera.
