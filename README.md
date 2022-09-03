@@ -52,7 +52,7 @@ Therefore, in this code the minimal DLT solver + RANSAC and Over-determined DLT 
 
 ### Over-determined DLT
 
-This method minimises $\lvert\lvert{Bp}\rvert\rvert^2$ such that $\lvert\lvert{p}\rvert\rvert=1$. To minimise $\lvert\lvert{Bp}\rvert\rvert^2$, the system of linear equations must be an over-determined system, which means more than 12 equations are required. This basically turns the problem into a least-squares problem, whilst performing SVD in a large matrix to calculate $P$ matrix. The $P$ matrix is already optimised to all data points over least-squares cost function, however it can be further optimised with another robust estimator again in Gauss-Newton algorithm. This method is expected to perform well under the assumption there is no outlier in the dataset.
+This method minimises $\lvert\lvert{Bp}\rvert\rvert^2$ such that $\lvert\lvert{p}\rvert\rvert=1$ . To minimise $\lvert\lvert{Bp}\rvert\rvert^2$ , the system of linear equations must be an over-determined system, which means more than 12 equations are required. This basically turns the problem into a least-squares problem, whilst performing SVD in a large matrix to calculate $P$ matrix. The $P$ matrix is already optimised to all data points over least-squares cost function, however it can be further optimised with another robust estimator again in Gauss-Newton algorithm. This method is expected to perform well under the assumption there is no outlier in the dataset.
 
 ### Minimal DLT solver + RANSAC
 
